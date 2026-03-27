@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Tarefa } from './types/Tarefa';
 import { carregarTarefas, salvarTarefas } from './storage/tarefasStorage';
 import FormTarefas from './components/FormTarefas';
+import ListaTarefas from './components/ListaTarefas';
 
 
 export default function App() {
@@ -67,6 +68,11 @@ export default function App() {
         texto={texto}
         onChangeTexto={setTexto}
         onAdicionar={adicionarTarefa} />
+
+      <ListaTarefas
+        tarefas={tarefas}
+        onToogle={alternarConclusao}
+        onRemover={removerTarefa} />
 
     </SafeAreaView>
   );
