@@ -31,6 +31,34 @@ export default function App() {
     Keyboard.dismiss();
   }
 
+  function alternarConclusao(id: string) {
+    setTarefas((estadoAtual) => 
+      estadoAtual.map((tarefa) =>
+        tarefa.id === id
+          ? { ...tarefa, concluida: !tarefa.concluida }
+          : tarefa
+        )
+    );
+  }
+
+  function removerTarefa(id: string) {
+    Alert.alert(
+      "Remover Tarefa",
+      "Deseja realmente excluir esta tarefa?",
+      [
+        {text: "Cancelar"},
+        {
+          text: "Remover",
+          onPress: () => {
+            setTarefas((estadoAtual) => 
+              estadoAtual.filter((tarefa) => tarefa.id != id)
+            );
+          }
+        }
+      ]
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titulo}>Lista de Tarefas</Text>
