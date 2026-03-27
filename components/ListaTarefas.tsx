@@ -19,3 +19,18 @@ export default function ListaTarefas ({ tarefas, onToogle, onRemover} : Props) {
             )} />
     );
 }
+
+const styles = StyleSheet.create({
+    listaContainer: {
+        paddingBottom: 24
+    },
+    listaVaziaContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    listaVaziaTexto: {
+        fontSize: 16,
+        color: '#666'
+    }
+});
