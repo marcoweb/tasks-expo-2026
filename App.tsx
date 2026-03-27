@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Alert, Keyboard, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Tarefa } from './types/Tarefa';
@@ -12,6 +12,20 @@ export default function App() {
   const [texto, setTexto] = useState('');
   const [tarefas, setTarefas] = useState<Tarefa[]>([])
   const [carregando, setCarregando] = useState(true)
+
+  useEffect(() => {
+    async function buscarDados() {
+      const tarefasSalvas = await carregarTarefas();
+      setTarefas(tarefasSalvas);
+      setCarregando(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if(!carregando) {
+      salvarTarefas(tarefas);
+    }
+  }, [tarefas, carregando]);
 
   function adicionarTarefa() {
     const textoLimpo = texto.trim();
@@ -60,14 +74,39 @@ export default function App() {
     )
   }
 
+  function LimparConcluidas() {
+    const existeConcluida = tarefas.some((tarefa) => tarefa.concluida);
+
+    if(!existeConcluida) {
+      Alert.alert("Atenção", "Não há tarefas concluídas para remover.");
+      return;
+    }
+
+    setTarefas(
+      (estadoAtual) => estadoAtual.filter((tarefa) => !tarefa.concluida)
+    );
+  }
+
+  const total = tarefas.length;
+  const concluidas = tarefas.filter((tarefa) => tarefa.concluida).length;
+  const pendentes = total - concluidas;
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titulo}>Lista de Tarefas</Text>
+
+      <Text>
+        Pendentes: {pendentes} | Concluidas: {concluidas}
+      </Text>
 
       <FormTarefas
         texto={texto}
         onChangeTexto={setTexto}
         onAdicionar={adicionarTarefa} />
+
+      <TouchableOpacity style={styles.botaoSecundario} onPress={LimparConcluidas}>
+        <Text style={styles.textoBotaoSecundario}>Remover Concluídas</Text>
+      </TouchableOpacity>
 
       <ListaTarefas
         tarefas={tarefas}
@@ -89,5 +128,17 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 4
+  },
+  botaoSecundario: {
+    alignSelf: 'flex-start',
+    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: '#e9eef6',
+    borderRadius: 8
+  },
+  textoBotaoSecundario: {
+    color: '#223344',
+    fontWeight: '600'
   }
 });

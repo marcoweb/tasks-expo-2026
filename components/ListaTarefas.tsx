@@ -13,7 +13,10 @@ export default function ListaTarefas ({ tarefas, onToogle, onRemover} : Props) {
     return (
         <FlatList data={tarefas}
             keyExtractor={(item) => item.id}
-            ListEmptyComponent={<Text>Nenhuma Tarefa Cadastrada</Text>}
+            contentContainerStyle={
+                tarefas.length == 0 ? styles.listaVaziaContainer : styles.listaContainer
+            }
+            ListEmptyComponent={<Text style={styles.listaVaziaTexto}>Nenhuma Tarefa Cadastrada</Text>}
             renderItem={({item}) => (
                 <ItemTarefa tarefa={item} onToogle={onToogle} onRemover={onRemover} />
             )} />
